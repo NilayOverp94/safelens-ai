@@ -116,7 +116,7 @@ export const ScreenshotAnalyzer = ({ onAnalysisComplete, deepCheck }: Screenshot
         <Button 
           onClick={() => document.getElementById('screenshot-upload')?.click()}
           disabled={loading}
-          className="w-full bg-primary hover:bg-primary/90 transition-colors"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
           {loading ? (
             <>

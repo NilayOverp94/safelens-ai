@@ -78,7 +78,7 @@ export const LinkChecker = ({ onAnalysisComplete, deepCheck }: LinkCheckerProps)
         <Button 
           onClick={handleAnalyze}
           disabled={loading || !text.trim()}
-          className="w-full bg-primary hover:bg-primary/90 transition-colors"
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 transition-colors disabled:opacity-50"
         >
           {loading ? (
             <>
