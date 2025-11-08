@@ -1,14 +1,47 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { AlertCircle, CheckCircle, AlertTriangle, ExternalLink, Lightbulb, Shield } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { AlertCircle, CheckCircle, AlertTriangle, ExternalLink, Lightbulb, Shield, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface AnalysisResultsProps {
   result: any;
 }
 
 export const AnalysisResults = ({ result }: AnalysisResultsProps) => {
+  const [email, setEmail] = useState("");
+  const [isSending, setIsSending] = useState(false);
+
   if (!result) return null;
+
+  const handleSendEmail = async () => {
+    if (!email || !email.includes("@")) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      const { error } = await supabase.functions.invoke("send-report", {
+        body: { email, result },
+      });
+
+      if (error) throw error;
+
+      toast.success("Report sent successfully!");
+      setEmail("");
+    } catch (error: any) {
+      console.error("Error sending email:", error);
+      toast.error("Failed to send report. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   const { overall, findings, imagePreview } = result;
   
@@ -135,6 +168,40 @@ export const AnalysisResults = ({ result }: AnalysisResultsProps) => {
               </ul>
             </div>
           )}
+        </CardContent>
+      </Card>
+
+      <Card className="bg-card border-border">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-primary">
+            <Mail className="w-5 h-5" />
+            Email This Report
+          </CardTitle>
+          <CardDescription>
+            Receive a detailed copy of this security analysis
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col gap-3">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <Button 
+              onClick={handleSendEmail}
+              disabled={isSending}
+              className="w-full"
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              {isSending ? "Sending..." : "Send Report"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
