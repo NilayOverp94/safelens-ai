@@ -119,47 +119,16 @@ const Dashboard = () => {
             Analyze suspicious content using advanced AI. Upload screenshots or check links for potential threats.
           </p>
           
-          <div className="flex flex-col items-center gap-4 pt-4">
-            <div className="flex items-center gap-3">
-              <Switch
-                id="deep-check"
-                checked={deepCheck}
-                onCheckedChange={setDeepCheck}
-              />
-              <Label htmlFor="deep-check" className="flex items-center gap-2 cursor-pointer">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-foreground">Deep Check Mode</span>
-              </Label>
-            </div>
-
-            <Card className="w-full max-w-md bg-card/50 border-primary/20">
-              <CardContent className="pt-6">
-                <div className="flex items-start space-x-3">
-                  <Checkbox
-                    id="email-report"
-                    checked={sendEmailReport}
-                    onCheckedChange={(checked) => setSendEmailReport(checked as boolean)}
-                  />
-                  <div className="flex-1 space-y-2">
-                    <Label
-                      htmlFor="email-report"
-                      className="text-sm font-medium leading-none cursor-pointer"
-                    >
-                      Send analysis report to my email
-                    </Label>
-                    {sendEmailReport && (
-                      <Input
-                        type="email"
-                        placeholder="your@email.com"
-                        value={reportEmail}
-                        onChange={(e) => setReportEmail(e.target.value)}
-                        className="mt-2"
-                      />
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="flex items-center justify-center gap-3 pt-4">
+            <Switch
+              id="deep-check"
+              checked={deepCheck}
+              onCheckedChange={setDeepCheck}
+            />
+            <Label htmlFor="deep-check" className="flex items-center gap-2 cursor-pointer">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span className="text-foreground">Deep Check Mode</span>
+            </Label>
           </div>
         </div>
 
