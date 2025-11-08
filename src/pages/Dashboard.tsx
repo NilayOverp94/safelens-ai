@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { ScreenshotAnalyzer } from "@/components/ScreenshotAnalyzer";
 import { LinkChecker } from "@/components/LinkChecker";
@@ -190,6 +190,34 @@ const Dashboard = () => {
           </p>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t border-border/50 mt-20">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Shield className="h-6 w-6 text-primary" />
+              <span className="font-bold text-lg">SafeLens AI</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
+              <Link to="/privacy" className="hover:text-primary transition-colors">
+                Privacy Policy
+              </Link>
+              <span className="hidden md:inline">•</span>
+              <Link to="/terms" className="hover:text-primary transition-colors">
+                Terms of Service
+              </Link>
+              <span className="hidden md:inline">•</span>
+              <Link to="/contact" className="hover:text-primary transition-colors">
+                Contact
+              </Link>
+            </div>
+            <p className="text-muted-foreground text-sm">
+              © 2025 SafeLens AI. Protecting users worldwide.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
