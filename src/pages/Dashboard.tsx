@@ -8,14 +8,22 @@ import { Shield, Sparkles, LogOut } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { User } from "@supabase/supabase-js";
+import { z } from "zod";
+
+const emailSchema = z.string().email("Invalid email address");
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState<User | null>(null);
   const [deepCheck, setDeepCheck] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [sendEmailReport, setSendEmailReport] = useState(false);
+  const [reportEmail, setReportEmail] = useState("");
 
   useEffect(() => {
     // Check if user is logged in
@@ -46,6 +54,29 @@ const Dashboard = () => {
     } else {
       toast.success("Signed out successfully");
       navigate("/");
+    }
+  };
+
+  const handleAnalysisComplete = async (result: any) => {
+    setAnalysisResult(result);
+
+    // Send email if checkbox is checked and email is valid
+    if (sendEmailReport && reportEmail) {
+      try {
+        emailSchema.parse(reportEmail);
+        const { error } = await supabase.functions.invoke("send-report", {
+          body: { email: reportEmail, result },
+        });
+
+        if (error) throw error;
+        toast.success("Report sent to your email!");
+      } catch (error: any) {
+        if (error instanceof z.ZodError) {
+          toast.error("Please enter a valid email address");
+        } else {
+          toast.error("Failed to send email report");
+        }
+      }
     }
   };
 
@@ -86,27 +117,58 @@ const Dashboard = () => {
             Analyze suspicious content using advanced AI. Upload screenshots or check links for potential threats.
           </p>
           
-          <div className="flex items-center justify-center gap-3 pt-4">
-            <Switch
-              id="deep-check"
-              checked={deepCheck}
-              onCheckedChange={setDeepCheck}
-            />
-            <Label htmlFor="deep-check" className="flex items-center gap-2 cursor-pointer">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-foreground">Deep Check Mode</span>
-            </Label>
+          <div className="flex flex-col items-center gap-4 pt-4">
+            <div className="flex items-center gap-3">
+              <Switch
+                id="deep-check"
+                checked={deepCheck}
+                onCheckedChange={setDeepCheck}
+              />
+              <Label htmlFor="deep-check" className="flex items-center gap-2 cursor-pointer">
+                <Sparkles className="h-4 w-4 text-primary" />
+                <span className="text-foreground">Deep Check Mode</span>
+              </Label>
+            </div>
+
+            <Card className="w-full max-w-md bg-card/50 border-primary/20">
+              <CardContent className="pt-6">
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="email-report"
+                    checked={sendEmailReport}
+                    onCheckedChange={(checked) => setSendEmailReport(checked as boolean)}
+                  />
+                  <div className="flex-1 space-y-2">
+                    <Label
+                      htmlFor="email-report"
+                      className="text-sm font-medium leading-none cursor-pointer"
+                    >
+                      Send analysis report to my email
+                    </Label>
+                    {sendEmailReport && (
+                      <Input
+                        type="email"
+                        placeholder="your@email.com"
+                        value={reportEmail}
+                        onChange={(e) => setReportEmail(e.target.value)}
+                        className="mt-2"
+                      />
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
 
         {/* Analysis Tools */}
         <div className="grid md:grid-cols-2 gap-6 mb-8">
           <ScreenshotAnalyzer 
-            onAnalysisComplete={setAnalysisResult}
+            onAnalysisComplete={handleAnalysisComplete}
             deepCheck={deepCheck}
           />
           <LinkChecker 
-            onAnalysisComplete={setAnalysisResult}
+            onAnalysisComplete={handleAnalysisComplete}
             deepCheck={deepCheck}
           />
         </div>
