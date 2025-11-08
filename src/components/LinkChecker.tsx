@@ -67,13 +67,15 @@ export const LinkChecker = ({ onAnalysisComplete, deepCheck }: LinkCheckerProps)
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Textarea
-          placeholder="Paste a URL, suspicious message, or any text you want to check...&#10;&#10;Example:&#10;• https://example.com&#10;• Click here to claim your prize!&#10;• Verify your account immediately"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="min-h-[150px] bg-muted border-border focus:border-primary"
-          disabled={loading}
-        />
+        <div className="border-2 border-dashed border-border rounded-lg p-4 hover:border-primary/50 transition-all duration-300">
+          <Textarea
+            placeholder="Paste a URL, suspicious message, or any text you want to check...&#10;&#10;Example:&#10;• https://example.com&#10;• Click here to claim your prize!&#10;• Verify your account immediately"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="min-h-[150px] bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 resize-none"
+            disabled={loading}
+          />
+        </div>
         
         <Button 
           onClick={handleAnalyze}
