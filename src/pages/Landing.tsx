@@ -51,7 +51,7 @@ const Landing = () => {
                 Start Scanning <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <Link to="/auth">
+            <Link to="/dashboard">
               <Button size="lg" variant="outline" className="text-lg px-8 py-6">
                 View Demo
               </Button>
@@ -118,12 +118,48 @@ const Landing = () => {
 
       {/* Footer */}
       <footer className="border-t border-border/50 mt-20">
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Shield className="h-6 w-6 text-primary" />
-              <span className="font-bold text-lg">SafeLens AI</span>
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Shield className="h-6 w-6 text-primary" />
+                <span className="font-bold text-lg">SafeLens AI</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                AI-powered security analysis to protect you from online threats.
+              </p>
             </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3">Product</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link to="/dashboard" className="hover:text-primary transition-colors">Dashboard</Link></li>
+                <li><Link to="/auth" className="hover:text-primary transition-colors">Get Started</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3">Legal</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-3">Contact</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Us</Link></li>
+                <li>
+                  <a href="mailto:nilayraj712@gmail.com" className="hover:text-primary transition-colors">
+                    nilayraj712@gmail.com
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="pt-8 border-t border-border/50 text-center">
             <p className="text-muted-foreground text-sm">
               © 2025 SafeLens AI. Protecting users worldwide.
             </p>
