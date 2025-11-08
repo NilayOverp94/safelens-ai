@@ -60,6 +60,8 @@ const Dashboard = () => {
   const handleAnalysisComplete = async (result: any) => {
     setAnalysisResult(result);
 
+    console.log("Analysis complete. Email checkbox:", sendEmailReport, "Email:", reportEmail);
+
     // Send email if checkbox is checked and email is valid
     if (sendEmailReport && reportEmail) {
       try {
