@@ -22,33 +22,46 @@ const handler = async (req: Request): Promise<Response> => {
     const { email, result }: EmailRequest = await req.json();
     console.log("Sending email to:", email);
 
+    const { overall, findings } = result;
+    
     const emailResponse = await resend.emails.send({
       from: "SafeLens AI <onboarding@resend.dev>",
       to: [email],
-      subject: `SafeLens AI Analysis Report - ${result.overallRisk}`,
+      subject: `SafeLens AI Analysis Report - ${overall?.category || 'Analysis Complete'}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #0a0a0a; color: #00ff94; padding: 20px; border: 1px solid #00ff94;">
           <h1 style="color: #00ff94; text-align: center; margin-bottom: 20px;">🛡️ SafeLens AI Security Report</h1>
           
           <div style="background-color: #1a1a1a; border: 1px solid #333; padding: 15px; margin-bottom: 20px;">
-            <h2 style="color: #00ff94; margin-top: 0;">Overall Risk: ${result.overallRisk}</h2>
-            <p style="font-size: 16px; line-height: 1.6;">${result.summary}</p>
+            <h2 style="color: #00ff94; margin-top: 0;">Risk Level: ${overall?.category || 'Unknown'}</h2>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 10px;"><strong>Safety Score:</strong> ${overall?.safety_score || 'N/A'}/100</p>
+            <p style="font-size: 16px; line-height: 1.6; margin-bottom: 10px;"><strong>Confidence:</strong> ${overall?.confidence || 'N/A'}</p>
+            <p style="font-size: 16px; line-height: 1.6;">${overall?.verdict_one_liner || 'Analysis complete'}</p>
           </div>
 
-          ${result.threats?.length > 0 ? `
+          ${findings?.reasons?.length > 0 ? `
           <div style="background-color: #1a1a1a; border: 1px solid #333; padding: 15px; margin-bottom: 20px;">
-            <h3 style="color: #ff4444;">⚠️ Detected Threats:</h3>
+            <h3 style="color: #ff4444;">⚠️ Key Findings:</h3>
             <ul style="padding-left: 20px;">
-              ${result.threats.map((threat: string) => `<li style="margin-bottom: 8px;">${threat}</li>`).join('')}
+              ${findings.reasons.map((reason: string) => `<li style="margin-bottom: 8px;">${reason}</li>`).join('')}
             </ul>
           </div>
           ` : ''}
 
-          ${result.recommendations?.length > 0 ? `
+          ${findings?.extracted_urls?.length > 0 ? `
           <div style="background-color: #1a1a1a; border: 1px solid #333; padding: 15px; margin-bottom: 20px;">
-            <h3 style="color: #00ff94;">✅ Recommendations:</h3>
+            <h3 style="color: #ffaa00;">🔗 Extracted URLs:</h3>
             <ul style="padding-left: 20px;">
-              ${result.recommendations.map((rec: string) => `<li style="margin-bottom: 8px;">${rec}</li>`).join('')}
+              ${findings.extracted_urls.map((url: string) => `<li style="margin-bottom: 8px; word-break: break-all;">${url}</li>`).join('')}
+            </ul>
+          </div>
+          ` : ''}
+
+          ${findings?.tips?.length > 0 ? `
+          <div style="background-color: #1a1a1a; border: 1px solid #333; padding: 15px; margin-bottom: 20px;">
+            <h3 style="color: #00ff94;">💡 Safety Tips:</h3>
+            <ul style="padding-left: 20px;">
+              ${findings.tips.map((tip: string) => `<li style="margin-bottom: 8px;">${tip}</li>`).join('')}
             </ul>
           </div>
           ` : ''}
