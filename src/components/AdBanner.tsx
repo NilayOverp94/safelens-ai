@@ -2,18 +2,28 @@ import { useEffect } from "react";
 
 const AdBanner = () => {
   useEffect(() => {
-    // Create and inject the ad script
-    const script = document.createElement("script");
-    script.src = "//pl28164834.effectivegatecpm.com/5b3eb380361c574ece05204390812293/invoke.js";
-    script.async = true;
-    script.setAttribute("data-cfasync", "false");
+    // Create and inject the first ad script
+    const script1 = document.createElement("script");
+    script1.src = "//pl28164834.effectivegatecpm.com/5b3eb380361c574ece05204390812293/invoke.js";
+    script1.async = true;
+    script1.setAttribute("data-cfasync", "false");
     
-    document.body.appendChild(script);
+    // Create and inject the second ad script
+    const script2 = document.createElement("script");
+    script2.src = "//pl28165442.effectivegatecpm.com/a8/7a/79/a87a7988cd7c41f72c1f307747d5e5fd.js";
+    script2.async = true;
+    script2.type = "text/javascript";
+    
+    document.body.appendChild(script1);
+    document.body.appendChild(script2);
     
     return () => {
-      // Cleanup script on unmount
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
+      // Cleanup scripts on unmount
+      if (document.body.contains(script1)) {
+        document.body.removeChild(script1);
+      }
+      if (document.body.contains(script2)) {
+        document.body.removeChild(script2);
       }
     };
   }, []);
